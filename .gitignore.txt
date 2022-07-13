@@ -1,2 +1,2 @@
 .vscode
-billing_System.exe
+*.exe
