@@ -12,7 +12,7 @@ typedef struct billData{
 
 typedef struct customerData{
     char name[30];
-    int number[10];
+    char number[12];
     char email[40];
 } customerData;
 
@@ -37,24 +37,31 @@ void preferredOption(int *choice){
 }
 
 // HARSHIT, YOU HAVE TO COMPLETE THIS DESIGN FUNCTION NAMED "invoiceDesign"
-void invoiceDesign(){
+// USE customerNo TO GET PARTICULAR CUSTOMER'S DETAILS
+void invoiceDesign(billData *bill, customerData *customer, int *total, int customerNo){
 
 }
 
 // HARSH, YOU HAVE TO COMPLETE THIS CALCULATION FUNCTION NAMED "calculateBill"
 // CALCULATE THE TOTAL WITHOUT GST INCLUDED
-void calculateBill(billData *bill, int *total){
+void calculateBill(billData *bill, int *total, int customerNo){
 
 }
 
-void invoice(customerData *customer, int *customerNo){
+void showAllInvoices(){
+
+}
+
+void searchInvoice(){
+
+}
+
+void invoice(customerData *customer, int *customerNo, int *total){
     int itemsType = 0;
     printf("\nEnter Your Name: ");
     scanf("%s", customer[*customerNo].name);
     printf("\nEnter Your Phone Number: ");
-    for(int i = 0; i < 10; i++){
-        scanf("%d", &customer[*customerNo].number[i]);
-    }
+    scanf("%d", &customer[*customerNo].number);
     printf("\nEnter Your Email: ");
     scanf("%s", customer[*customerNo].email);
     printf("\n");
@@ -69,23 +76,23 @@ void invoice(customerData *customer, int *customerNo){
         printf("Enter the unit price of the item: ");
         scanf("%d", &bill[i].unitPrice);
     }
-    int total = 0;
-    calculateBill(bill, &total);
-    invoiceDesign(bill, customer[*customerNo], total);
-    *customerNo ++;
+    calculateBill(bill, total, *customerNo);
+    invoiceDesign(bill, customer, total, *customerNo);
+    *customerNo++;
     return;
 }
 
 int main(){
     int choice = 0, customerNo = 0;
     customerData *customers = calloc(100, sizeof(customerData));
+    int *total = calloc(100, sizeof(int));
     while(choice != 1 && choice != 2 && choice != 3 && choice != 4)
     {
         preferredOption(&choice);
     }
     switch(choice){
         case 1:
-            invoice(customers, &customerNo);
+            invoice(customers, &customerNo, total);
             break;
         case 2:
             showAllInvoices();
