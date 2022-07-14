@@ -38,14 +38,20 @@ void preferredOption(int *choice){
 
 // HARSHIT, YOU HAVE TO COMPLETE THIS DESIGN FUNCTION NAMED "invoiceDesign"
 // USE customerNo TO GET PARTICULAR CUSTOMER'S DETAILS
-void invoiceDesign(billData *bill, customerData *customer, int *total, int customerNo){
+void invoiceDesign(billData *bill, customerData *customer, int *total, int customerNo, int itemType){
 
 }
 
 // HARSH, YOU HAVE TO COMPLETE THIS CALCULATION FUNCTION NAMED "calculateBill"
 // CALCULATE THE TOTAL WITHOUT GST INCLUDED
-void calculateBill(billData *bill, int *total, int customerNo){
-
+void calculateBill(billData *bill, int *total, int customerNo, int itemType){
+    int totalBill = 0;
+    for(int i = 0; i < itemType; i++){
+        totalBill += bill[i].quantity * bill[i].unitPrice;
+    }
+    *total = totalBill;
+    // printf("\nTotal Bill: %d\n", totalBill);
+    return;
 }
 
 void showAllInvoices(){
@@ -67,24 +73,28 @@ void invoice(customerData *customer, int *customerNo, int *total){
     printf("\n");
     printf("\nEnter the number of Different items you hove ordered: ");
     scanf("%d", &itemsType);
+    billData *bills = calloc(100, sizeof(billData));
     billData *bill = calloc(itemsType, sizeof(billData));
+    bills[*customerNo] = *bill;
     for(int i = 0; i < itemsType; i++){
-        printf("\nEnter the name of the item: ");
+        printf("\nEnter the name of the item %d: ", i+1);
         scanf("%s", bill[i].name);
-        printf("Enter the quantity of the item: ");
+        printf("Enter the quantity of the item %d: ", i+1);
         scanf("%d", &bill[i].quantity);
-        printf("Enter the unit price of the item: ");
+        printf("Enter the unit price of the item %d: ", i+1);
         scanf("%d", &bill[i].unitPrice);
     }
-    calculateBill(bill, total, *customerNo);
-    invoiceDesign(bill, customer, total, *customerNo);
+    calculateBill(bill, total, *customerNo, itemsType);
+    invoiceDesign(bill, customer, total, *customerNo, itemsType);
     *customerNo++;
     return;
 }
 
 int main(){
     int choice = 0, customerNo = 0;
+    // customerData *customerArr = calloc(20, sizeof(customerData *));
     customerData *customers = calloc(100, sizeof(customerData));
+    // customerArr[customerNo] = *customers;
     int *total = calloc(100, sizeof(int));
     while(choice != 1 && choice != 2 && choice != 3 && choice != 4)
     {
