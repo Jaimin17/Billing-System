@@ -15,17 +15,10 @@ typedef struct customerData{
     char number[12];
     char email[40];
     char date[10];
+    int itemType;
 } customerData;
 
 void preferredOption(int *choice){
-    // for(int i = 0; i < 21; i++){
-    //     if(i == 11){
-    //         printf("QUINTET Restaurant");
-    //     }
-    //     else{
-    //         printf("=");
-    //     }
-    // }
     printf("==========QUINTET Restaurant==========\n");
     printf("\n");
     printf("\nPlease Select Your Preferred Option:\n");
@@ -40,15 +33,15 @@ void preferredOption(int *choice){
 
 // HARSHIT, YOU HAVE TO COMPLETE THIS DESIGN FUNCTION NAMED "invoiceDesign"
 // USE customerNo TO GET PARTICULAR CUSTOMER'S DETAILS
-void invoiceDesign(billData **bills, customerData *customer, int *total, int customerNo, int itemType){
-    int main();
+void invoiceDesign(billData **bills, customerData *customer, int *total, int customerNo){
+    printf("Welcome\n");
 }
 
 // HARSH, YOU HAVE TO COMPLETE THIS CALCULATION FUNCTION NAMED "calculateBill"
 // CALCULATE THE TOTAL WITHOUT GST INCLUDED
-void calculateBill(billData **bills, int *total, int customerNo, int itemType){
+void calculateBill(billData **bills, customerData *customer, int *total, int customerNo){
     int totalBill = 0;
-    for(int i = 0; i < itemType; i++){
+    for(int i = 0; i < customer[customerNo].itemType; i++){
         totalBill += bills[customerNo][i].quantity * bills[customerNo][i].unitPrice;
     }
     total[customerNo] = totalBill;
@@ -56,72 +49,117 @@ void calculateBill(billData **bills, int *total, int customerNo, int itemType){
     return;
 }
 
-void showAllInvoices(billData **bills, customerData *customers, int *itemsType, int *customerNo, int *total){
-    for(int i = 0; i < customerNo; i++){
-        
+void showAllInvoices(billData **bills, customerData *customers, int *customerNo, int *total){
+    for(int i = 0; i < *customerNo; i++){
+        invoiceDesign(bills, customers, total, i);
     }
-    //TODO 
+    return;
 }
 
-void searchInvoice(billData **bills, customerData *customers, int *itemsType, int *customerNo){
-    //TODO 
-    
-    
-    printf("\nEnter the Customer Name : ");
-    scanf("%s", &customer);
-    
+void searchInvoice(billData **bills, customerData *customers, int *customerNo, int *total){
+    char searchNumber[30];
+    printf("\nEnter the number of the customer: ");
+    scanf("%s", searchNumber);
+    for(int i = 0; i < *customerNo; i++){
+        if(strncmp(searchNumber, customers[i].number, 10)){
+            invoiceDesign(bills, customers, total, i);
+        }
+    }
+    return;
 }
 
 void invoice(customerData *customer, int *customerNo, int *total, billData **bills){
-    int itemsType = 0;
-    printf("\nEnter Your Name: ");
-    scanf("%s", customer[*customerNo].name);
-    printf("\nEnter Your Phone Number: ");
-    scanf("%d", &customer[*customerNo].number);
-    printf("\nEnter Your Email: ");
-    scanf("%s", customer[*customerNo].email);
+    *customer[*customerNo].date = __DATE__;
+    lable4:
+        gets(customer[*customerNo].name);
+        printf("\nEnter Your Name: ");
+        // scanf("%s", customer[*customerNo].name);
+        gets(customer[*customerNo].name);
+        if(strlen(customer[*customerNo].name) == 0){
+            printf("\nPlease Enter Your Name\n");
+            goto lable4;
+        }
+    lable2:
+        printf("\nEnter Your Phone Number: ");
+        // scanf("%s", &customer[*customerNo].number);
+        gets(customer[*customerNo].number);
+        if(strlen(customer[*customerNo].number) != 10){
+            printf("\nInvalid Phone Number\n");
+            goto lable2;
+        }
+    lable3:
+        printf("\nEnter Your Email: ");
+        // scanf("%s", customer[*customerNo].email);
+        gets(customer[*customerNo].email);
+        int len = strlen(customer[*customerNo].email);
+        char test[4] = ".com";
+        if(!strcmp(&customer[*customerNo].email[len-4], test)){
+            printf("\nInvalid Email\n");
+            goto lable3;
+        }
     printf("\n");
     printf("\nEnter the number of Different items you have ordered: ");
-    scanf("%d", &itemsType);
-    billData *bill = calloc(itemsType, sizeof(billData));
+    scanf("%d", &customer[*customerNo].itemType);
+    billData *bill = calloc(customer[*customerNo].itemType, sizeof(billData));
     bills[*customerNo] = bill;
-    for(int i = 0; i < itemsType; i++){
+    for(int i = 0; i < customer[*customerNo].itemType; i++){
         printf("\nEnter the name of the item %d: ", i+1);
-        scanf("%s", bill[i].name);
+        gets(bills[*customerNo][i].name);
+        gets(bills[*customerNo][i].name);
         printf("Enter the quantity of the item %d: ", i+1);
         scanf("%d", &bill[i].quantity);
         printf("Enter the unit price of the item %d: ", i+1);
         scanf("%d", &bill[i].unitPrice);
     }
-    calculateBill(bills, total, *customerNo, itemsType);
-    invoiceDesign(bills, customer, total, *customerNo, itemsType);
-    *customerNo++;
+    calculateBill(bills, customer, total, *customerNo);
+    invoiceDesign(bills, customer, total, *customerNo);
+    *customerNo += 1;
     return;
 }
 
-int main(){
-    int choice = 0, customerNo = 0;
-    // customerData *customerArr = calloc(20, sizeof(customerData *));
-    customerData *customers = calloc(100, sizeof(customerData));
-    // customerArr[customerNo] = *customers;
-    int *total = calloc(100, sizeof(int));
-    billData **bills = calloc(100, sizeof(billData *));
-    while(choice != 1 && choice != 2 && choice != 3 && choice != 4)
-    {
+void Choice(billData **bills, customerData *customers, int *total, int *customerNo){
+    int choice = 0, Continue = 0;
+    while(choice > 4 || choice < 1){
         preferredOption(&choice);
     }
     switch(choice){
         case 1:
-            invoice(customers, &customerNo, total, bills);
+            invoice(customers, customerNo, total, bills);
             break;
         case 2:
-            // showAllInvoices();
+            showAllInvoices(bills, customers, customerNo, total);
             break;
         case 3:
-            searchInvoice();
+            searchInvoice(bills, customers, customerNo, total);
             break;
         case 4:
-            return 0;
+            return;
+    }
+}
+
+int main(){
+    int customerNo = 0, Continue = 0;
+    customerData *customers = calloc(100, sizeof(customerData));
+    // customerArr[customerNo] = *customers;
+    int *total = calloc(100, sizeof(int));
+    billData **bills = calloc(100, sizeof(billData *));
+    lable1:
+        Choice(bills, customers, total, &customerNo);
+    printf("You want to continue? (1. Yes 2. No) ");
+    scanf("%d", &Continue);
+    if(Continue == 1){
+        Continue = 0;
+        goto lable1;
+    }
+    else if(Continue == 2){
+        Continue = 0;
+        printf("\nThank you for using our service.\n");
+        return 0;
+    }
+    else{
+        Continue = 0;
+        printf("\nInvalid Input.\n");
+        goto lable1;;            
     }
     return 0;
 }
