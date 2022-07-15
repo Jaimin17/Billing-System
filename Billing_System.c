@@ -34,7 +34,26 @@ void preferredOption(int *choice){
 // HARSHIT, YOU HAVE TO COMPLETE THIS DESIGN FUNCTION NAMED "invoiceDesign"
 // USE customerNo TO GET PARTICULAR CUSTOMER'S DETAILS
 void invoiceDesign(billData **bills, customerData *customer, int *total, int customerNo){
-    printf("Welcome\n");
+    
+    printf("\n=============QUINTET Restaurant=============");
+    // printf("\n%s",customer[customerNo].date);
+    printf("\nInvoice To: %s",customer[customerNo].name);
+    printf("\n============================================");
+    printf("\nItem\t\tQty\t\t  Total");
+    printf("\n============================================");
+    for(int i = 0; i < itemType; i++){
+        printf("\n%s\t\t%d\t\t  %d",bills[customerNo][i].name,bills[customerNo][i].quantity,bills[customerNo][i].quantity * bills[customerNo][i].unitPrice);
+    }
+    printf("\n============================================");
+    printf("\nSub Total\t\t\t  %d",total[customerNo]);
+    printf("\nDiscount(@10)\t\t          %f",(float)(total[customerNo]*10/100));
+    printf("\n             \t\t          ===========");
+    printf("\nNet Total    \t\t          %d",total[customerNo]-total[customerNo]*10/100);
+    printf("\nCGST (@9%)   \t\t          %f",(float)(total[customerNo]*9/100));
+    printf("\nSGST (@9%)   \t\t          %f",(float)(total[customerNo]*9/100));
+    printf("\n============================================");
+    printf("\nGrand Total  \t\t          %f",(float)(total[customerNo]+total[customerNo]*9/100+total[customerNo]*9/100));
+    printf("\n============================================");
 }
 
 // HARSH, YOU HAVE TO COMPLETE THIS CALCULATION FUNCTION NAMED "calculateBill"
