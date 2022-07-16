@@ -111,8 +111,10 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
         gets(customer[*customerNo].email);
         int len = strlen(customer[*customerNo].email);
         // printf("%d", len);
-        char test[4] = ".com";
-        if(!strcmp(&customer[*customerNo].email[len-4], test)){
+        char test[] = ".com";
+        // int x = strcmp(&customer[*customerNo].email[len-4], test);
+        // printf("%d", x);
+        if(strcmp(&customer[*customerNo].email[len-4], test)){
             printf("\nInvalid Email\n");
             goto lable3;
         }
