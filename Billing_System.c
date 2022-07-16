@@ -25,7 +25,8 @@ void preferredOption(int *choice){
     printf("1. Generate Invoice\n");
     printf("2. Show all Invoices\n");
     printf("3. Search Invoice\n");
-    printf("4. Exit\n");
+    printf("4. Edit Invoice\n");
+    printf("5. Exit\n");
     printf("\nEnter your choice: ");
     scanf("%d", choice);
     return;
@@ -94,6 +95,77 @@ void searchInvoice(billData **bills, customerData *customers, int *customerNo, i
     return;
 }
 
+void editInvoice(billData **bills, customerData *customers, int *customerNo, int *total){
+    char searchNumber[12];
+    int choice = 0;
+    printf("\nEnter the number of the customer: ");
+    scanf("%s", searchNumber);
+    for(int i = 0; i < *customerNo; i++){
+        if(!strncmp(searchNumber, customers[i].number, 10)){
+            invoiceDesign(bills, customers, total, i);
+            printf("\nWant to :\n   1. Add new ItemType\n   2. Edit ItemType\n   3. Delete ItemType\n   4. Delete Bill\n   5. Exit\n");
+            scanf("%d", &choice);
+            int srNo = 0;
+            switch (choice)
+            {
+            case 1:
+                customers[i].itemType++;
+                bills[i] = realloc(bills[i], sizeof(billData) * customers[i].itemType);
+                printf("\nEnter the name of the %d item: ", customers[i].itemType);
+                scanf("%s", bills[i][customers[i].itemType - 1].name);
+                printf("\nEnter the quantity of the %d item: ", customers[i].itemType);
+                scanf("%d", &bills[i][customers[i].itemType - 1].quantity);
+                printf("\nEnter the unit price of the %d item: ", customers[i].itemType);
+                scanf("%d", &bills[i][customers[i].itemType - 1].unitPrice);
+                calculateBill(bills, customers, total, i);
+                invoiceDesign(bills, customers, total, i);
+                break;
+
+            case 2:
+                printf("\nEnter Sr.No of items to be edited: ");
+                scanf("%d", &srNo);
+                srNo--;
+                printf("\nEnter the name of the %d item: ", srNo + 1);
+                scanf("%s", bills[i][srNo].name);
+                printf("\nEnter the quantity of the %d item: ", srNo + 1);
+                scanf("%d", &bills[i][srNo].quantity);
+                printf("\nEnter the unit price of the %d item: ", srNo + 1);
+                scanf("%d", &bills[i][srNo].unitPrice);
+                calculateBill(bills, customers, total, i);
+                invoiceDesign(bills, customers, total, i);
+                break;
+
+            case 3:
+                printf("\nEnter Sr.No of items to be deleted: ");
+                scanf("%d", &srNo);
+                srNo--;
+                for(int j = srNo; j < customers[i].itemType - 1; j++){
+                    strcpy(bills[i][j].name, bills[i][j+1].name);
+                    bills[i][j].quantity = bills[i][j+1].quantity;
+                    bills[i][j].unitPrice = bills[i][j+1].unitPrice;
+                }
+                customers[i].itemType--;
+                calculateBill(bills, customers, total, i);
+                invoiceDesign(bills, customers, total, i);
+                break;
+
+            case 4:
+                for(int j = i; j < *customerNo - 1; j++){
+                    bills[j] = bills[j+1];
+                    customers[j] = customers[j+1];
+                    total[j] = total[j+1];
+                }
+                *customerNo--;
+                printf("\nInvoice deleted successfully\n");
+                break;
+
+            case 5:
+                return;
+            }
+        }
+    }
+}
+
 void invoice(customerData *customer, int *customerNo, int *total, billData **bills){
     int check = 0;
     strcpy(customer[*customerNo].date, __DATE__);
@@ -155,7 +227,7 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
 
 void Choice(billData **bills, customerData *customers, int *total, int *customerNo){
     int choice = 0, Continue = 0;
-    while(choice > 4 || choice < 1){
+    while(choice > 5 || choice < 1){
         preferredOption(&choice);
     }
     switch(choice){
@@ -169,6 +241,9 @@ void Choice(billData **bills, customerData *customers, int *total, int *customer
             searchInvoice(bills, customers, customerNo, total);
             break;
         case 4:
+            editInvoice(bills, customers, customerNo, total);
+            break;
+        case 5:
             return;
     }
 }
