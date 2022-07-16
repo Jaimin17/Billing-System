@@ -79,7 +79,7 @@ void searchInvoice(billData **bills, customerData *customers, int *customerNo, i
     printf("\nEnter the number of the customer: ");
     scanf("%s", searchNumber);
     for(int i = 0; i < *customerNo; i++){
-        if(strncmp(searchNumber, customers[i].number, 10)){
+        if(!strncmp(searchNumber, customers[i].number, 10)){
             invoiceDesign(bills, customers, total, i);
         }
     }
@@ -87,6 +87,7 @@ void searchInvoice(billData **bills, customerData *customers, int *customerNo, i
 }
 
 void invoice(customerData *customer, int *customerNo, int *total, billData **bills){
+    int check = 0;
     strcpy(customer[*customerNo].date, __DATE__);
     lable4:
         gets(customer[*customerNo].name);
@@ -101,7 +102,13 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
         printf("\nEnter Your Phone Number: ");
         // scanf("%s", &customer[*customerNo].number);
         gets(customer[*customerNo].number);
-        if(strlen(customer[*customerNo].number) != 10){
+        for(int i = 0; i < 10; i++){
+            if(customer[*customerNo].number[i] < '0' || customer[*customerNo].number[i] > '9'){
+                check = 1;
+                break;
+            }
+        }
+        if(strlen(customer[*customerNo].number) != 10 || check == 1){
             printf("\nInvalid Phone Number\n");
             goto lable2;
         }
