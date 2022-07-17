@@ -273,6 +273,7 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
             goto lable2;
         }
     lable3:
+        fflush(stdin);
         printf("\nEnter Your Phone Number: ");
         // scanf("%s", &customer[*customerNo].number);
         gets(customer[*customerNo].number);
