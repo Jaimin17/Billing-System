@@ -92,7 +92,7 @@ void searchInvoice(billData **bills, customerData *customers, int *customerNo, i
     char searchNumber[30];
     int check = 0;
     printf("\nEnter the number of the customer: ");
-    gets(searchNumber);
+    scanf("%s", searchNumber);
         for(int i = 0; i < 10; i++){
             if(searchNumber[i] < '0' || searchNumber[i] > '9'){
                 check = 1;
@@ -117,6 +117,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
     char searchNumber[12];
     int choice = 0, check = 0;
     lable6:
+        fflush(stdin);
         printf("\nEnter the number of the customer: ");
         // scanf("%s", searchNumber);
         gets(searchNumber);
