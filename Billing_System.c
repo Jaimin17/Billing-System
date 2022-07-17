@@ -14,7 +14,7 @@ typedef struct customerData{
     char name[30];
     char number[12];
     char email[40];
-    char date[10];
+    char date[12];
     int itemType;
 } customerData;
 
@@ -30,7 +30,7 @@ void preferredOption(int *choice){
     printf("5. Exit\n");
     printf("\nEnter your choice: ");
     scanf("%d", choice);
-
+    printf("\n============================================");
     // ADD LINE HERE
     return;
 }
@@ -42,6 +42,8 @@ void invoiceDesign(billData **bills, customerData *customer, int *total, int cus
     printf("\n=============QUINTET Restaurant=============");
     printf("\n%s",customer[customerNo].date);
     printf("\nInvoice To: %s",customer[customerNo].name);
+    printf("\nContact No: %s",customer[customerNo].number);
+    printf("\nEmail-id:   %s",customer[customerNo].email);
     printf("\n============================================");
     printf("\nItem\t\t    Qty\t\tTotal");
     printf("\n============================================");
@@ -89,25 +91,65 @@ void showAllInvoices(billData **bills, customerData *customers, int *customerNo,
 
 //FUNCTION TO PRINT INVOICE OF PARTICULAR CUSTOMER
 void searchInvoice(billData **bills, customerData *customers, int *customerNo, int *total){
-    char searchNumber[30];
-    int check = 0;
-    printf("\nEnter the number of the customer: ");
-    scanf("%s", searchNumber);
-        for(int i = 0; i < 10; i++){
-            if(searchNumber[i] < '0' || searchNumber[i] > '9'){
-                check = 1;
-                break;
+    int n;
+    printf("\nSearch According 1)Number or 2)Name");
+    printf("\n Enter the choice");
+    scanf("%d",&n);
+    
+    
+        if(n==1)
+        {
+            char searchNumber[30];
+            int check = 0;
+            printf("\nEnter the Number of customer: ");
+            scanf("%s", searchNumber);
+            for(int i = 0; i < 10; i++){
+                if(searchNumber[i] < '0' || searchNumber[i] > '9'){
+                    check = 1;
+                    break;
+                }
+            }
+            if(strlen(searchNumber) != 10 || check == 1){
+                    printf("\nInvalid Phone Number\n");
+                    searchInvoice(bills, customers, customerNo, total);
+                }
+            for(int i = 0; i < *customerNo; i++){
+                if(!strncmp(searchNumber, customers[i].number, 10)){
+                    invoiceDesign(bills, customers, total, i);
+                }
             }
         }
-        if(strlen(searchNumber) != 10 || check == 1){
-            printf("\nInvalid Phone Number\n");
-            searchInvoice(bills, customers, customerNo, total);
-        }
-    for(int i = 0; i < *customerNo; i++){
-        if(!strncmp(searchNumber, customers[i].number, 10)){
-            invoiceDesign(bills, customers, total, i);
-        }
-    }
+
+        else
+        {
+            char searchName[30];
+            int p = 0;
+            fflush(stdin);
+            printf("\nEnter the Name of the customer: ");
+            gets(searchName);
+                for(int i = 0; searchName[i] != '\0'; i++){
+                    if(searchName[i] <= 90 && searchName[i] >= 65){
+                        searchName[i] = searchName[i] + 32;
+                    }
+                }
+                for(int i = 0; i < *customerNo; i++){
+                    if(*customers[i].name <= 90 && *customers[i].name >= 65){
+                        *customers[i].name = *customers[i].name + 32;
+                    }
+                }
+                for(int i = 0; i < *customerNo; i++){
+                    p=strcmp(searchName,customers[i].name);
+                    if(p == 0){
+                        invoiceDesign(bills, customers, total, i);
+                    }    
+                }
+                if(p == 1)
+                {
+                    printf("\n Invalid Customer Name");
+                }
+            }   
+            
+    printf("\n============================================");
     // ADD LINE HERE
     return;
 }
@@ -131,6 +173,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
             printf("\nInvalid Phone Number\n");
             goto lable6;
         }
+        printf("\n============================================");
         // ADD LINE HERE
         int editSameBill = 0;
         for(int i = 0; i < *customerNo; i++){
@@ -140,6 +183,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                     printf("\nWant to :\n   1. Add new ItemType\n   2. Edit ItemType\n   3. Delete ItemType\n   4. Delete Bill\n   5. Exit\n");
                     printf("Enter your choice: ");
                     scanf("%d", &choice);
+                    printf("\n============================================");
                     // ADD LINE HERE
                     int srNo = 0;
                     switch (choice)
@@ -160,6 +204,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                         printf("\nDo You want to Edit More: \n1. With Same Bill Number \n2. With Another Bill Number \n3. Exit");
                         printf("\nEnter You Choice: ");
                         scanf("%d", &editSameBill);
+                        printf("\n============================================");
                         // ADD LINE HERE
                         if(editSameBill == 1){
                             goto lable5;
@@ -174,6 +219,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                     case 2:
                         printf("\nEnter Sr.No of items to be edited: ");
                         scanf("%d", &srNo);
+                        printf("\n============================================");
                         // ADD LINE HERE
                         srNo--;
                         fflush(stdin);
@@ -186,10 +232,12 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                         scanf("%d", &bills[i][srNo].unitPrice);
                         calculateBill(bills, customers, total, i);
                         invoiceDesign(bills, customers, total, i);
+                        printf("\n============================================");
                         // ADD LINE HERE
                         printf("\nDo You want to Edit More: \n1. With Same Bill Number \n2. With Another Bill Number \n3. Exit");
                         printf("\nEnter You Choice: ");
                         scanf("%d", &editSameBill);
+                        printf("\n============================================");
                         // ADD LINE HERE
                         if(editSameBill == 1){
                             goto lable5;
@@ -204,6 +252,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                     case 3:
                         printf("\nEnter Sr.No of items to be deleted: ");
                         scanf("%d", &srNo);
+                        printf("\n============================================");
                         // ADD LINE HERE
                         srNo--;
                         for(int j = srNo; j < customers[i].itemType - 1; j++){
@@ -214,10 +263,12 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                         customers[i].itemType--;
                         calculateBill(bills, customers, total, i);
                         invoiceDesign(bills, customers, total, i);
+                        printf("\n============================================");
                         // ADD LINE HERE
                         printf("\nDo You want to Edit More: \n1. With Same Bill Number \n2. With Another Bill Number \n3. Exit");
                         printf("\nEnter You Choice: ");
                         scanf("%d", &editSameBill);
+                        printf("\n============================================");
                         // ADD LINE HERE
                         if(editSameBill == 1){
                             goto lable5;
@@ -240,6 +291,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                         printf("\nDo You want to Edit More: \n1. With Same Bill Number \n2. With Another Bill Number \n3. Exit");
                         printf("\nEnter You Choice: ");
                         scanf("%d", &editSameBill);
+                        printf("\n============================================");
                         // ADD LINE HERE
                         if(editSameBill == 1){
                             goto lable5;
@@ -300,10 +352,12 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
             printf("\nInvalid Email\n");
             goto lable4;
         }
+        printf("\n============================================");
         // ADD LINE HERE
     printf("\n");
     printf("\nEnter the number of Different items you have ordered: ");
     scanf("%d", &customer[*customerNo].itemType);
+    printf("\n============================================");
     // ADD LINE HERE
     billData *bill = calloc(customer[*customerNo].itemType, sizeof(billData));
     bills[*customerNo] = bill;
@@ -316,10 +370,12 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
         scanf("%d", &bill[i].quantity);
         printf("Enter the unit price of the item %d: ", i+1);
         scanf("%d", &bill[i].unitPrice);
+        printf("\n============================================");
         // ADD LINE HERE
     }
     calculateBill(bills, customer, total, *customerNo);
     invoiceDesign(bills, customer, total, *customerNo);
+    printf("\n============================================");
     // ADD LINE HERE
     *customerNo += 1;
     return;
@@ -357,6 +413,7 @@ int main(){
     billData **bills = calloc(100, sizeof(billData *));
     lable1:
         Choice(bills, customers, total, &customerNo);
+        //printf("\n============================================");
     // ADD LINE HERE
     printf("\n");
     printf("You want to continue? (1. Yes 2. No) \n");
@@ -369,6 +426,7 @@ int main(){
         Continue = 0;
         printf("\nThank you for using our service.\n");
         // ADD LINE HERE
+        printf("\n============================================");
         return 0;
     }
     else{
@@ -376,5 +434,6 @@ int main(){
         printf("\nInvalid Input.\n");
         goto lable1;;            
     }
+    printf("\n============================================");
     return 0;
 }
