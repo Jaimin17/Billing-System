@@ -1,0 +1,6 @@
+Pizza 2 546
+Maggi 5 654
+Pasta 5 854
+Mango 5 231
+Watermelon 6 986
+Banana 5 546
