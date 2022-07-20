@@ -19,10 +19,10 @@ typedef struct customerData{
     int itemType;
 } customerData;
 
-//TODO CHECK FSCANF FUNCTION
 
 //FUNCTION TO ASK USER WHAT FUNCTION HE WANT TO PERFORM
 void preferredOption(int *choice){
+    system("cls");
     printf("==========QUINTET Restaurant==========\n");
     printf("\n");
     printf("\nPlease Select Your Preferred Option:\n");
@@ -76,6 +76,7 @@ void saveInvoice(billData **bills, customerData *customer, int *total, int custo
         fprintf(fp, "\nGrand Total  \t\t         %f",(float)(total[customerNo]+total[customerNo]*9/100+total[customerNo]*9/100));
         fprintf(fp, "\n============================================\n\n\n");
         fclose(fp);
+        printf("\n Invoice Saved Successfully!\n");
         return;
     }
     else{
@@ -88,6 +89,7 @@ void saveInvoice(billData **bills, customerData *customer, int *total, int custo
 void invoiceDesign(billData **bills, customerData *customer, int *total, int customerNo){
     int l=0,a;
     char c;
+    system("cls");
     printf("\n=============QUINTET Restaurant=============");
     printf("\n%s",customer[customerNo].date);
     printf("\nInvoice To: %s",customer[customerNo].name);
@@ -138,6 +140,7 @@ void calculateBill(billData **bills, customerData *customer, int *total, int cus
 
 //FUNCTION TO PRINTF ALL INVOICES
 void showAllInvoices(billData **bills, customerData *customers, int *customerNo, int *total){
+    system("cls");
     for(int i = 0; i < *customerNo; i++){
         invoiceDesign(bills, customers, total, i);
     }
@@ -147,6 +150,8 @@ void showAllInvoices(billData **bills, customerData *customers, int *customerNo,
 //FUNCTION TO PRINT INVOICE OF PARTICULAR CUSTOMER
 void searchInvoice(billData **bills, customerData *customers, int *customerNo, int *total){
     int n;
+    system("cls");
+    printf("\n=============QUINTET Restaurant=============\n");
     printf("\nSearch According to: 1. Number 2. Name");
     printf("\n Enter the choice: ");
     scanf("%d",&n);
@@ -163,13 +168,18 @@ void searchInvoice(billData **bills, customerData *customers, int *customerNo, i
             }
         }
         if(strlen(searchNumber) != 10 || check == 1){
-                printf("\nInvalid Phone Number\n");
-                searchInvoice(bills, customers, customerNo, total);
-            }
+            printf("\nInvalid Phone Number\n");
+            searchInvoice(bills, customers, customerNo, total);
+        }
+        int count = 0;
         for(int i = 0; i < *customerNo; i++){
             if(!strncmp(searchNumber, customers[i].number, 10)){
                     invoiceDesign(bills, customers, total, i);
+                    count++;
             }
+        }
+        if(count == 0){
+            printf("\nNo Invoice Found\n");
         }
     }
     else{
@@ -188,14 +198,17 @@ void searchInvoice(billData **bills, customerData *customers, int *customerNo, i
                 *customers[i].name = *customers[i].name + 32;
             }
         }
+        int count = 0;
         for(int i = 0; i < *customerNo; i++){
             p=strcmp(searchName,customers[i].name);
             if(p == 0){
+                customers[i].name[0] = customers[i].name[0] - 32;
                 invoiceDesign(bills, customers, total, i);
-            }    
+                count++;
+            }
         }
-        if(p == 1){
-            printf("\n Invalid Customer Name");
+        if(count == 0){
+            printf("\nNo Invoice Found\n");
         }
     }
 
@@ -209,6 +222,8 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
     char searchNumber[12];
     int choice = 0, check = 0;
     fflush(stdin);
+    system("cls");
+    printf("\n=============QUINTET Restaurant=============");
     lable6:
         printf("\nEnter the number of the customer: ");
         // scanf("%s", searchNumber);
@@ -225,6 +240,8 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
         }
         // ADD LINE HERE
         lable5:
+            system("cls");
+            printf("\n=============QUINTET Restaurant=============");
             printf("\n============================================");
 
             printf("\nDo you want to: 1. Edit the Invoice 2. Delete the Invoice: ");
@@ -235,13 +252,15 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
         FILE *fp1;
         FILE *fp2;
         FILE *fp3;
-        int editSameBill = 0;
+        int editSameBill = 0, count = 0;
         fp = fopen("dataCustomers.txt", "w");
         fp1 = fopen("dataBills.txt", "w");
         fp2 = fopen("dataTotal.txt", "w");
         fp3 = fopen("dataCustomerNo.txt", "w");
         switch (choice){
             case 1:
+                system("cls");
+                printf("\n=============QUINTET Restaurant=============");
                 for(int i = 0; i < *customerNo; i++){
                     fprintf(fp, "%s ", customers[i].name);
                     fprintf(fp, "%s ", customers[i].number);
@@ -249,6 +268,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                     fprintf(fp, "%s ", customers[i].date);
 
                     if(!strncmp(searchNumber, customers[i].number, 10)){
+                    count++;
                     invoiceDesign(bills, customers, total, i);
                     printf("\nWant to :\n   1. Add new ItemType\n   2. Edit ItemType\n   3. Delete ItemType\n   4. Exit\n");
                     printf("Enter your choice: ");
@@ -294,6 +314,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                                 fprintf(fp, "%s ", customers[i].date);
                                 fprintf(fp, "%d\n", customers[i].itemType);
                             }
+                            printf("\nItem added successfully\n");
                             printf("\n============================================");
                             printf("\nDo You want to Edit More: \n1. With Same Bill Number \n2. With Another Bill Number \n3. Exit");
                             printf("\nEnter You Choice: ");
@@ -363,6 +384,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                                 fprintf(fp, "%s ", customers[i].date);
                                 fprintf(fp, "%d\n", customers[i].itemType);
                             }
+                            printf("\nItem edited successfully\n");
                             // ADD LINE HERE
                             printf("\n============================================");
                             printf("\nDo You want to Edit More: \n1. With Same Bill Number \n2. With Another Bill Number \n3. Exit");
@@ -424,6 +446,7 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                                 fprintf(fp, "%s ", customers[n].date);
                                 fprintf(fp, "%d\n", customers[n].itemType);
                             }
+                            printf("\nItem deleted successfully\n");
                             // ADD LINE HERE
                             printf("\n============================================");
                             printf("\nDo You want to Edit More: \n1. With Same Bill Number \n2. With Another Bill Number \n3. Exit");
@@ -476,10 +499,18 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                     fprintf(fp2, "%d\n", total[i]);
                     fprintf(fp, "%d\n", customers[i].itemType);
                 }
+                if(count == 0){
+                    printf("\n============================================");
+                    printf("\nNo Such Bill Number Exists");
+                    printf("\n============================================");
+                    count = 0;
+                    goto lable6;
+                }
 
             case 2:
                 for(int i = 0; i < *customerNo; i++){
                     if(!strncmp(searchNumber, customers[i].number, 10)){
+                        count++;
                         if(i == *customerNo - 1){
                             *customerNo = *customerNo - 1;
                             printf("\nInvoice deleted successfully\n");
@@ -518,6 +549,13 @@ void editInvoice(billData **bills, customerData *customers, int *customerNo, int
                         }
                     }
                 }
+            if(count == 0){
+                printf("\n============================================");
+                printf("\nNo Such Number Exists");
+                printf("\n============================================");
+                count = 0;
+                goto lable6;
+            }
             fprintf(fp3, "%d", *customerNo);
             fclose(fp);
             fclose(fp1);
@@ -548,6 +586,8 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
     strcpy(customer[*customerNo].date, __DATE__);
     FILE *fp;
     fp = fopen("dataCustomers.txt", "a");
+    system("cls");
+    printf("\n=============QUINTET Restaurant=============");
     lable2:
         // gets(customer[*customerNo].name);
         printf("\nEnter Your Name: ");
@@ -599,6 +639,8 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
     fprintf(fp, "%d\n", customer[*customerNo].itemType);
     fclose(fp);
     // ADD LINE HERE
+    system("cls");
+    printf("\n=============QUINTET Restaurant=============");
     printf("\n============================================\n");
     billData *bill = calloc(customer[*customerNo].itemType, sizeof(billData));
     bills[*customerNo] = bill;
@@ -618,6 +660,7 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
         // ADD LINE HERE
         printf("\n============================================\n");
     }
+    printf("\n You data has been successfully saved");
     fclose(fp);
     calculateBill(bills, customer, total, *customerNo);
     invoiceDesign(bills, customer, total, *customerNo);
@@ -699,6 +742,7 @@ void login()
     char pass[10]="WTF!!!";
     do{
         system("cls");
+        printf("\n   =============         QUINTET Restaurant        =============");
         printf("\n  =========================  LOGIN FORM  =========================  ");
         printf(" \n                       ENTER USERNAME:-");
         scanf("%s", &uname); 
@@ -727,14 +771,13 @@ void login()
         }
     }
     while(a<=2);
-        if (a>2)
-        {
+        if (a>2){
             printf("\nSorry you have entered the wrong username and password for four times!!!");
             
             getch();
             
-            }
-            system("cls");	
+        }
+    system("cls");	
 }
 
 int main(){
