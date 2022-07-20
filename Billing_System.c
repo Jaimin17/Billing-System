@@ -5,12 +5,14 @@
 #include <math.h>
 #include <conio.h>
 
+// BILLDATA STRUCTURE
 typedef struct billData{
     char name[20];
     int quantity;
     int unitPrice;
 } billData;
 
+// CUSTOMERDATA STRUCTURE
 typedef struct customerData{
     char name[30];
     char number[12];
@@ -39,6 +41,7 @@ void preferredOption(int *choice){
     return;
 }
 
+// FUNCTION TO SAVE INVOICE DATA TO FILE
 void saveInvoice(billData **bills, customerData *customer, int *total, int customerNo){
     char c;
     int l = 0;
@@ -615,6 +618,7 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
             goto lable3;
         }
         fprintf(fp, "%s ", customer[*customerNo].number);
+        
     lable4:
         printf("\nEnter Your Email: ");
         // scanf("%s", customer[*customerNo].email);
@@ -630,7 +634,7 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
         }
         fprintf(fp, "%s ", customer[*customerNo].email);
         fprintf(fp, "%s ", customer[*customerNo].date);
-    // fclose(fp);
+        // fclose(fp);
         // ADD LINE HERE
         printf("\n============================================");
     printf("\n");
@@ -697,6 +701,7 @@ void Choice(billData **bills, customerData *customers, int *total, int *customer
     }
 }
 
+// READING STORE DATA FROM FILE
 void readData(billData **bills, customerData *customers, int *total, int *customerNo){
     FILE *fp;
     fp = fopen("dataCustomerNo.txt", "r");
@@ -733,6 +738,7 @@ void readData(billData **bills, customerData *customers, int *total, int *custom
     return;
 }
 
+// LOGIN FUNCTION
 void login()
 {
 	int a=0,i=0;
@@ -773,9 +779,7 @@ void login()
     while(a<=2);
         if (a>2){
             printf("\nSorry you have entered the wrong username and password for four times!!!");
-            
             getch();
-            
         }
     system("cls");	
 }
