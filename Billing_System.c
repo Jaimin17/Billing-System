@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <conio.h>
+#include <ctype.h>
 
 // BILLDATA STRUCTURE
 typedef struct billData{
@@ -73,10 +74,10 @@ void saveInvoice(billData **bills, customerData *customer, int *total, int custo
         fprintf(fp, "\nDiscount(@10)\t\t         %f",(float)(total[customerNo]*10/100));
         fprintf(fp, "\n             \t\t         ============");
         fprintf(fp, "\nNet Total    \t\t         %d",total[customerNo]-total[customerNo]*10/100);
-        fprintf(fp, "\nCGST (@9%)   \t\t         %f",(float)(total[customerNo]*9/100));
-        fprintf(fp, "\nSGST (@9%)   \t\t         %f",(float)(total[customerNo]*9/100));
+        fprintf(fp, "\nCGST (@2.5%)   \t\t         %f",(float)(total[customerNo]*2.5/100));
+        fprintf(fp, "\nSGST (@2.5%)   \t\t         %f",(float)(total[customerNo]*2.5/100));
         fprintf(fp, "\n============================================");
-        fprintf(fp, "\nGrand Total  \t\t         %f",(float)(total[customerNo]+total[customerNo]*9/100+total[customerNo]*9/100));
+        fprintf(fp, "\nGrand Total  \t\t         %f",(float)(total[customerNo]+total[customerNo]*2.5/100+total[customerNo]*2.5/100));
         fprintf(fp, "\n============================================\n\n\n");
         fclose(fp);
         printf("\n Invoice Saved Successfully!\n");
@@ -115,10 +116,10 @@ void invoiceDesign(billData **bills, customerData *customer, int *total, int cus
     printf("\nDiscount(@10)\t\t         %f",(float)(total[customerNo]*10/100));
     printf("\n             \t\t         ============");
     printf("\nNet Total    \t\t         %d",total[customerNo]-total[customerNo]*10/100);
-    printf("\nCGST (@9%)   \t\t         %f",(float)(total[customerNo]*9/100));
-    printf("\nSGST (@9%)   \t\t         %f",(float)(total[customerNo]*9/100));
+    printf("\nCGST (@2.5%)   \t\t         %f",(float)(total[customerNo]*2.5/100));
+    printf("\nSGST (@2.5%)   \t\t         %f",(float)(total[customerNo]*2.5/100));
     printf("\n============================================");
-    printf("\nGrand Total  \t\t         %f",(float)(total[customerNo]+total[customerNo]*9/100+total[customerNo]*9/100));
+    printf("\nGrand Total  \t\t         %f",(float)(total[customerNo]+total[customerNo]*2.5/100+total[customerNo]*2.5/100));
     printf("\n============================================\n");
 
     saveInvoice(bills, customer, total, customerNo);
@@ -172,13 +173,14 @@ void searchInvoice(billData **bills, customerData *customers, int *customerNo, i
         }
         if(strlen(searchNumber) != 10 || check == 1){
             printf("\nInvalid Phone Number\n");
+            getch();
             searchInvoice(bills, customers, customerNo, total);
         }
         int count = 0;
         for(int i = 0; i < *customerNo; i++){
             if(!strncmp(searchNumber, customers[i].number, 10)){
-                    invoiceDesign(bills, customers, total, i);
                     count++;
+                    invoiceDesign(bills, customers, total, i);
             }
         }
         if(count == 0){
@@ -589,20 +591,26 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
     strcpy(customer[*customerNo].date, __DATE__);
     FILE *fp;
     fp = fopen("dataCustomers.txt", "a");
-    system("cls");
-    printf("\n=============QUINTET Restaurant=============");
+    // system("cls");
+    // printf("\n=============QUINTET Restaurant=============");
     lable2:
+        system("cls");
+        printf("\n=============QUINTET Restaurant=============");
         // gets(customer[*customerNo].name);
         printf("\nEnter Your Name: ");
         scanf("%s", customer[*customerNo].name);
+        customer[*customerNo].name[0] = toupper(customer[*customerNo].name[0]);
         // gets(customer[*customerNo].name);
         if(strlen(customer[*customerNo].name) == 0){
             printf("\nPlease Enter Your Name\n");
+            getch();
             goto lable2;
         }
         fprintf(fp, "%s ", customer[*customerNo].name);
 
     lable3:
+        system("cls");
+        printf("\n=============QUINTET Restaurant=============");
         fflush(stdin);
         printf("\nEnter Your Phone Number: ");
         // scanf("%s", &customer[*customerNo].number);
@@ -615,11 +623,15 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
         }
         if(strlen(customer[*customerNo].number) != 10 || check == 1){
             printf("\nInvalid Phone Number\n");
+            check = 0;
+            getch();
             goto lable3;
         }
         fprintf(fp, "%s ", customer[*customerNo].number);
         
     lable4:
+        system("cls");
+        printf("\n=============QUINTET Restaurant=============");
         printf("\nEnter Your Email: ");
         // scanf("%s", customer[*customerNo].email);
         gets(customer[*customerNo].email);
@@ -630,14 +642,16 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
         // printf("%d", x);
         if(strcmp(&customer[*customerNo].email[len-4], test)){
             printf("\nInvalid Email\n");
+            getch();
             goto lable4;
         }
         fprintf(fp, "%s ", customer[*customerNo].email);
         fprintf(fp, "%s ", customer[*customerNo].date);
         // fclose(fp);
         // ADD LINE HERE
-        printf("\n============================================");
-    printf("\n");
+    system("cls");
+    printf("\n=============QUINTET Restaurant=============");
+    // printf("\n============================================\n");
     printf("\nEnter the number of Different items you have ordered: ");
     scanf("%d", &customer[*customerNo].itemType);
     fprintf(fp, "%d\n", customer[*customerNo].itemType);
@@ -645,7 +659,7 @@ void invoice(customerData *customer, int *customerNo, int *total, billData **bil
     // ADD LINE HERE
     system("cls");
     printf("\n=============QUINTET Restaurant=============");
-    printf("\n============================================\n");
+    // printf("\n============================================\n");
     billData *bill = calloc(customer[*customerNo].itemType, sizeof(billData));
     bills[*customerNo] = bill;
     fp = fopen("dataBills.txt", "a");
@@ -748,11 +762,11 @@ void login()
     char pass[10]="WTF!!!";
     do{
         system("cls");
-        printf("\n   =============         QUINTET Restaurant        =============");
+        printf("\n   =================     QUINTET Restaurant    =================\n");
         printf("\n  =========================  LOGIN FORM  =========================  ");
         printf(" \n                       ENTER USERNAME:-");
         scanf("%s", &uname); 
-        printf(" \n                       ENTER PASSWORD:-");
+        printf("                        ENTER PASSWORD:-");
         while(i<10){
             pword[i]=getch();
             c=pword[i];
@@ -808,6 +822,7 @@ int main(){
         Continue = 0;
         printf("\nThank you for using our service.\n");
         // ADD LINE HERE
+        printf("\nDesign By:\t #JAIMIN\t #HARSH_C\t #PARTH\n\t\t\t #HARSH_S\t #HARSHIT\n");
         printf("\n============================================");
         return 0;
     }
